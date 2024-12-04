@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Étape 1 : Checkout
+  checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+  # Étape 2 : Installation des dépendances
+  install:
+    runs-on: ubuntu-latest
+    needs: checkout
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          npm install
+
+  # Étape 3 : Tests
+  tests:
+    runs-on: ubuntu-latest
+    needs: install
+    steps:
+      - name: Run tests
+        run: npm test
+
+  # Étape 4 : Build
+  build:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Build the application
+        run: npm run build
+
+  # Étape 5 : Déploiement
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to production
+        run: |
+          echo "Déploiement vers production"
+          # Ajouter votre commande de déploiement ici
+  
